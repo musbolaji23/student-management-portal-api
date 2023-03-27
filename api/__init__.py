@@ -12,6 +12,7 @@ from .models.StudentCourse import StudentCourse
 from .models.teacher import Teacher
 from .models.students import Student
 from .utils import db
+from werkzeug.exceptions import NotFound, MethodNotAllowed
 
 
 def create_app(config=config_dict['dev']):
@@ -32,6 +33,14 @@ def create_app(config=config_dict['dev']):
     api.add_namespace(studentcourse_namespace)
     api.add_namespace(teacher_namespace)
     api.add_namespace(std_namespace, '/std')
+
+    @app.errorhandler(NotFound)
+    def not_found(error):
+        return {"error":"not found"}, 404
+    
+    @app.errorhandler(MethodNotAllowed)
+    def method_not_allowed(error):
+        return {"error":"not found"}, 404
 
 
     @app.shell_context_processor
